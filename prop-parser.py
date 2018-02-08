@@ -35,6 +35,7 @@ import os
 class PropParser():
 
     def __init__(self, load_file):
+        self.comments = []
         self.__properties__ = {}
         if load_file is not None:
             self.load(load_file)
@@ -52,9 +53,14 @@ class PropParser():
             return False
         
         with open(filename, 'r') as f:
-            for l in f:
+            for n, l in enumerate(f):
                 line = l.rstrip(os.linesep).strip('\t')
-                if len(line) < 2 or '=' not in line or line.startswith('#'):
+                if line.startswith('#'):
+                    self.comments.append({
+                        'lineno': n,
+                        'content': line
+                    })
+                if len(line) < 2 or '=' not in line:
                     continue
                 line = line.split('=', 1)
                 key = line[0].strip()
