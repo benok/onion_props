@@ -19,7 +19,7 @@ will be parsed to a dictionary:
         'd': 321
     }
 
-You can nest as many levels as you like, however the root property of a hierarchy cannot be explicitly set.
+You can nest as many levels as you like, however the root property of a hierarchy must not be explicitly set.
 For example the following will raise an error:
     a = 123
     a.b = test
@@ -43,8 +43,11 @@ class PropParser():
     def __setitem__(self, key, value):
         self.__properties__[key] = value
 
-    def __getitem__(self, item):
-        return self.__properties__.get(item)
+    def __getitem__(self, key):
+        return self.__properties__.get(key)
+
+    def __contains__(self, key):
+        return key in self.__properties__.keys()
 
     def load(self, filename):
         self.__properties__ = {}
