@@ -29,13 +29,22 @@ This is because 'a' is initially set to an integer, but then wants to be reassig
 
 '''
 
+from datetime import datetime
 import os
+import time
+
+
+class Property():
+
+    def __init__(self, val, comments=[]):
+        self.__properties__
 
 
 class PropParser():
 
-    def __init__(self, load_file):
-        self.comments = []
+    def __init__(self, load_file, COMMENT='#'):
+        # allows for custom comment denotation
+        self.COMMENT = COMMENT
         self.__properties__ = {}
         if load_file is not None:
             self.load(load_file)
@@ -56,37 +65,42 @@ class PropParser():
             return False
         
         with open(filename, 'r') as f:
+            cached_comments = []
             for n, l in enumerate(f):
                 line = l.rstrip(os.linesep).strip('\t')
-                if line.startswith('#'):
-                    self.comments.append({
-                        'lineno': n,
-                        'content': line
-                    })
+                if line.startswith(self.COMMENT):
+                    cached_comments.append(line.strip(self.COMMENT).strip(' '))
+                    continue
                 if len(line) < 2 or '=' not in line:
                     continue
                 line = line.split('=', 1)
                 key = line[0].strip()
                 value = line[1].strip() if len(line) > 1 else ''
-                self.__parse_prop(self.__properties__, key.split('.'), value)
+                self.__parse_prop(self.__properties__, cached_comments, key.split('.'), value)
         
         return True
 
-    def __parse_prop(self, props, keys, value):
+    def __parse_prop(self, props, comments, keys, value):
         if keys[0] in props.keys():
-            self.__parse_prop(props[keys[0]], keys[1:], value)
+            self.__parse_prop(props[keys[0]], comments, keys[1:], value)
         elif len(keys) > 1:
             props[keys[0]] = {}
-            self.__parse_prop(props[keys[0]], keys[1:], value)
+            self.__parse_prop(props[keys[0]], comments, keys[1:], value)
         else:
-            props[keys[0]] = value
+            props[keys[0]] = {
+                'valvalue
 
     def save(self, filename):
+        # formatted timestamp example: 'Sat Feb 10 16:07:17 EST 2018'
+        # note datetime's strftime %Z interpolation only returns a nonempty string if
+        # it is not a default zone (whatever that means), so I'm just using time.strftime's
+        timestamp = datetime.now().strftime('%a %b %d %H:%M:%S {} %Y'.format(time.strftime('%Z')))
         filename = (os.getcwd() + '/' if not filename.startswith('/') else '') + filename
         if not os.path.exists(filename.rsplit('/', 1)[0]):
             os.makedirs(filename.rsplit('/', 1)[0])
 
         with open(filename, 'w+') as f:
+            f.write(self.COMMENT + timestamp)
             compiled = []
             self.__build(self.__properties__, '', compiled)
             f.write('\n'.join(compiled))
