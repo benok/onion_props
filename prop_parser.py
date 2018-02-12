@@ -90,11 +90,11 @@ class PropParser:
 
     def __getitem__(self, key):
         p = self.__properties__.get(key)
-        if type(p) is dict:
-            print('think is dict')
-            return p
-        else:
+        # print(p)
+        if hasattr(p, 'prop'):
             return p.prop
+        else:
+            return p
 
     def __contains__(self, key):
         return key in self.__properties__.keys()
