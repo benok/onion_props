@@ -90,7 +90,6 @@ class PropParser:
 
     def __getitem__(self, key):
         p = self.__properties__.get(key)
-        # print(p)
         if hasattr(p, 'prop'):
             return p.prop
         else:
