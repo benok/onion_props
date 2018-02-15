@@ -17,8 +17,17 @@ class Property:
     '''
 
     def __init__(self, prop, comments=[]):
-        self.prop = prop
+        self.__dict__ = prop
         self.comments = comments[:]  # copy comments by value, not reference
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key)
+
+    def __setitem__(self, key, value):
+        return self.__dict__[key] = value
+
+    def __contains__(self, key):
+        return key in self.__dict__
 
 
 class PropParser:
@@ -89,11 +98,7 @@ class PropParser:
         self.__properties__[key].prop = value
 
     def __getitem__(self, key):
-        p = self.__properties__.get(key)
-        if hasattr(p, 'prop'):
-            return p.prop
-        else:
-            return p
+        return self.__properties__.get(key)
 
     def __contains__(self, key):
         return key in self.__properties__.keys()
