@@ -10,6 +10,8 @@ import os
 import time
 
 
+# Should have recursive dict property values so I can parse __getitem__ properly
+
 class Property:
     '''
     Data class containing the property value and the comments corresponding to it.
