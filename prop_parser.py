@@ -1,10 +1,11 @@
 '''
-prop_parser.py  ver. 0.1
+prop_parser.py  ver. 0.2
 
-(C) Conrad Heidebrecht (github.com/eternali) 10 Feb 2018
+(C) Conrad Heidebrecht (github.com/eternali) 16 Feb 2018
 
 '''
 
+from collections import OrderedDict  # to cover python versions < 3.6
 from datetime import datetime
 import os
 import time
@@ -26,7 +27,7 @@ class Property:
 class Properties:
 
     def __init__(self):
-        self.__dict__ = {}
+        self.__dict__ = OrderedDict()
 
     def __setitem__(self, key, value):
         self.__dict__[key] = value
@@ -41,6 +42,9 @@ class Properties:
     def __contains__(self, key):
         return key in self.__dict__
 
+    def __iter__(self):
+        return iter(self.__dict__)
+
     def update(self, *args, **kwargs):
         return self.__dict__.update(*args, **kwargs)
 
@@ -49,6 +53,13 @@ class Properties:
         prop = self.__dict__[key]
         if hasattr(prop, 'comments'):
             return prop.comments
+        else:
+            raise KeyError('The requested terminal property does not exist.')
+
+    def get_property(self, key):
+        prop = self.__dict__[key]
+        if type(prop) is not Properties:
+            return prop
         else:
             raise KeyError('The requested terminal property does not exist.')
 
@@ -159,26 +170,33 @@ class PropParser:
             props[keys[0]] = Property(value, comments)
             del comments[:]
 
-    def save(self, filename, timestamp=True, comments=True):
+    def save(self, filename, timestamp=True, incl_comments=True):
         # formatted timestamp example: 'Sat Feb 10 16:07:17 EST 2018'
         # note datetime's strftime %Z interpolation only returns a nonempty string if
         # it is not a default zone (whatever that means), so I'm just using time.strftime's
         ts = datetime.now().strftime('%a %b %d %H:%M:%S {} %Y'.format(time.strftime('%Z')))
-        filename = (os.getcwd() + '/' if not filename.startswith('/') else '') + filename
+        filename = (os.getcwd() + os.sep if os.sep not in filename else '') + filename
         if not os.path.exists(filename.rsplit('/', 1)[0]):
             os.makedirs(filename.rsplit('/', 1)[0])
 
         with open(filename, 'w+') as f:
             if timestamp:
-                f.write(self.COMMENT + ts)
+                f.write(self.COMMENT + ts + '\n')
             compiled = []
-            self.__build(self.__properties__, '', compiled, incl_comments=comments)
+            self.__build(self.__properties__, '', compiled, incl_comments=incl_comments)
             f.write('\n'.join(compiled))
 
     def __build(self, prop, cur_line, compiled, incl_comments=True):
-        if isinstance(prop, dict):
-            for key in prop.keys():
-                self.__build(prop[key], cur_line + ('.' if cur_line else '') + str(key), compiled)
+        if type(prop) is Properties:
+            for key in prop:
+                if type(prop[key]) is not Properties:
+                    self.__build(prop.get_property(key),
+                                 cur_line + ('.' if cur_line else '') + key,
+                                 compiled, incl_comments)
+                else:
+                    self.__build(prop[key],
+                                 cur_line + ('.' if cur_line else '') + key,
+                                 compiled, incl_comments)
         else:
             if incl_comments:
                 compiled += [self.COMMENT + comment for comment in prop.comments]
