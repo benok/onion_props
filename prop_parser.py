@@ -187,9 +187,9 @@ class PropParser:
             f.write('\n'.join(compiled))
 
     def __build(self, prop, cur_line, compiled, incl_comments=True):
-        if type(prop) is Properties:
+        if type(prop) in [Properties, dict]:
             for key in prop:
-                if type(prop[key]) is not Properties:
+                if type(prop[key]) is Property:
                     self.__build(prop.get_property(key),
                                  cur_line + ('.' if cur_line else '') + key,
                                  compiled, incl_comments)
@@ -197,9 +197,12 @@ class PropParser:
                     self.__build(prop[key],
                                  cur_line + ('.' if cur_line else '') + key,
                                  compiled, incl_comments)
-        else:
+        elif type(prop) is Property:
             if incl_comments:
                 compiled += [self.COMMENT + comment for comment in prop.comments]
             compiled.append(cur_line + '=' + prop.prop)
+        else:
+            compiled.append(cur_line + '=' + prop)
+
         
 

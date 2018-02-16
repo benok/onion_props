@@ -16,9 +16,9 @@ To import base parser class:
 ```from prop_parser import PropParser```
 
 NOTE:
-In order to add properties to the parser object, you should also import:
+To add properties to the parser object, it is advised that you also import:
 ```from prop_parser import Property, Properties```
 As they are the custom data storage classes PropParser uses.
-It is possible to add properties as standard dictionaries, but in order to add comments, you must import the `Property` class.
+It is possible to add properties as standard dictionary key-values, but in order to add comments, you must import the `Property` class.
 
 
