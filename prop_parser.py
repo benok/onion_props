@@ -19,17 +19,38 @@ class Property:
     '''
 
     def __init__(self, prop, comments=[]):
-        self.__dict__ = prop
+        self.prop = prop
         self.comments = comments[:]  # copy comments by value, not reference
 
-    def __getitem__(self, key):
-        return self.__dict__.get(key)
+
+class Properties:
+
+    def __init__(self):
+        self.__dict__ = {}
 
     def __setitem__(self, key, value):
-        return self.__dict__[key] = value
+        self.__dict__[key] = value
+
+    def __getitem__(self, key):
+        ret = self.__dict__[key]
+        if hasattr(ret, 'prop'):
+            return ret.prop
+        else:
+            return ret
 
     def __contains__(self, key):
         return key in self.__dict__
+
+    def update(self, *args, **kwargs):
+        return self.__dict__.update(*args, **kwargs)
+
+    # comments only apply to terminal properties (properties that are of type Property, not Properties)
+    def get_comments(self, key):
+        prop = self.__dict__[key]
+        if hasattr(prop, 'comments'):
+            return prop.comments
+        else:
+            raise KeyError('The requested terminal property does not exist.')
 
 
 class PropParser:
@@ -92,21 +113,21 @@ class PropParser:
     def __init__(self, load_file, COMMENT='#'):
         # allows for custom comment denotation
         self.COMMENT = COMMENT
-        self.__properties__ = {}
+        self.__properties__ = Properties()
         if load_file is not None:
             self.load(load_file)
 
     def __setitem__(self, key, value):
-        self.__properties__[key].prop = value
+        self.__properties__[key] = value
 
     def __getitem__(self, key):
-        return self.__properties__.get(key)
+        return self.__properties__[key]
 
     def __contains__(self, key):
-        return key in self.__properties__.keys()
+        return key in self.__properties__
 
     def load(self, filename):
-        self.__properties__ = {}
+        self.__properties__ = Properties()
         
         if not os.path.isfile(filename):
             return False
@@ -128,10 +149,10 @@ class PropParser:
         return True
 
     def __parse_prop(self, props, comments, keys, value):
-        if keys[0] in props.keys():
+        if keys[0] in props:
             self.__parse_prop(props[keys[0]], comments, keys[1:], value)
         elif len(keys) > 1:
-            props[keys[0]] = {}
+            props[keys[0]] = Properties()
             self.__parse_prop(props[keys[0]], comments, keys[1:], value)
         else:
             # save the final value and reset the comments for the next property
