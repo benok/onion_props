@@ -192,11 +192,11 @@ class PropParser:
     def __build(self, prop, cur_line, compiled, incl_comments=True):
         if type(prop) in [Properties, dict]:
             for key in prop:
-                if type(prop[key]) not in [Properties, dict]:
+                try:
                     self.__build(prop.get_property(key),
                                  cur_line + ('.' if cur_line else '') + key,
                                  compiled, incl_comments)
-                else:
+                except (AttributeError,  KeyError):
                     self.__build(prop[key],
                                  cur_line + ('.' if cur_line else '') + key,
                                  compiled, incl_comments)
