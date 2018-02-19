@@ -45,6 +45,9 @@ class Properties:
     def __iter__(self):
         return iter(self.__dict__)
 
+    def get(self, key):
+        return self.__dict__[key]
+
     def update(self, *args, **kwargs):
         return self.__dict__.update(*args, **kwargs)
 
@@ -189,7 +192,7 @@ class PropParser:
     def __build(self, prop, cur_line, compiled, incl_comments=True):
         if type(prop) in [Properties, dict]:
             for key in prop:
-                if type(prop[key]) is Property:
+                if type(prop[key]) not in [Properties, dict]:
                     self.__build(prop.get_property(key),
                                  cur_line + ('.' if cur_line else '') + key,
                                  compiled, incl_comments)
