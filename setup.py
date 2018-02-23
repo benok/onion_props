@@ -14,11 +14,11 @@ except:
     CHANGES = ''
 
 setup(
-    name='prop_parser',
+    name='onion_props',
     version='0.2.0',
-    description='An elegant hierarchical properties parser',
+    description='An elegant hierarchical (or "onioned") properties parser',
     long_description=README + '\n\n' + CHANGES,
-    url='https://github.com/eternali/prop-parser',
+    url='https://github.com/eternali/onion_props',
     author='Conrad Heidebrecht',
     author_email='conrad.heidebrecht@gmail.com',
     platforms='any',
@@ -28,9 +28,11 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6'
     ],
     keywords='properties java parser',
-    py_modules=['prop_parser'],
+    py_modules=['onion_props'],
     install_requires=['collections', 'datetime', 'os', 'time']
 )

@@ -1,5 +1,5 @@
 '''
-prop_parser.py  ver. 0.2
+onion_props.py  ver. 0.2
 
 (C) Conrad Heidebrecht (github.com/eternali) 16 Feb 2018
 
