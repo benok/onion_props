@@ -1,2 +1,5 @@
 *.properties
 __pycache__
+build
+dist
+prop_parser.egg-info
