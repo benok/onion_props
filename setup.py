@@ -15,7 +15,7 @@ except:
 
 setup(
     name='onion_props',
-    version='0.2.1',
+    version='0.2.2',
     description='An elegant hierarchical (or "onioned") properties parser',
     long_description=README + '\n\n' + CHANGES,
     url='https://github.com/eternali/onion_props',
@@ -34,5 +34,5 @@ setup(
     ],
     keywords='properties java parser',
     py_modules=['onion_props'] #,
-    # install_requires=['collections', 'datetime', 'os', 'time']
+    install_requires=['datetime']
 )

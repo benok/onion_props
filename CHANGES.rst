@@ -4,3 +4,6 @@ Changelog (Onion_props)
 ------
 - Changed name from prop_parser to onion_parser to accommodate for pypi
 
+0.2.1
+------
+- Removed integrated modules from install_requires to allow proper installation
