@@ -33,6 +33,6 @@ setup(
         'Programming Language :: Python :: 3.6'
     ],
     keywords='properties java parser',
-    py_modules=['onion_props'],
-    install_requires=['collections', 'datetime', 'os', 'time']
+    py_modules=['onion_props'] #,
+    # install_requires=['collections', 'datetime', 'os', 'time']
 )
