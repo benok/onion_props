@@ -13,11 +13,11 @@ ONION_PROPS also supports comments, you can specify whether or not to include co
 USAGE:
 
 To import base parser class:
-```from onion_props import PropParser```
+```from onion_props.onion_props import PropParser```
 
 NOTE:
 To add properties to the parser object, it is advised that you also import:
-```from onion_props import Property, Properties```
+```from onion_props.onion_props import Property, Properties```
 As they are the custom data storage classes PropParser uses.
 It is possible to add properties as standard dictionary key-values, but in order to add comments, you must import the `Property` class.
 

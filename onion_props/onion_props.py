@@ -1,7 +1,7 @@
 '''
-onion_props.py  ver. 0.2.1
+onion_props.py  ver. 0.2.3
 
-(C) Conrad Heidebrecht (github.com/eternali) 16 Feb 2018
+(C) Conrad Heidebrecht (github.com/eternali) 20 March 2018
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
