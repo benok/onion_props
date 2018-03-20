@@ -15,7 +15,7 @@ except:
 
 setup(
     name='onion_props',
-    version='0.2.3',
+    version='0.2.4',
     description='An elegant hierarchical (or "onioned") properties parser',
     long_description=README + '\n\n' + CHANGES,
     url='https://github.com/eternali/onion_props',

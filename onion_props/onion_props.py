@@ -1,5 +1,5 @@
 '''
-onion_props.py  ver. 0.2.3
+onion_props.py  ver. 0.2.4
 
 (C) Conrad Heidebrecht (github.com/eternali) 20 March 2018
 
