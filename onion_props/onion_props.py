@@ -137,12 +137,12 @@ class PropParser:
 
     '''
 
-    def __init__(self, load_file, COMMENT='#'):
+    def __init__(self, load_file, COMMENT='#', trim_quotes=False):
         # allows for custom comment denotation
         self.COMMENT = COMMENT
         self.__properties__ = Properties()
         if load_file is not None:
-            self.load(load_file)
+            self.load(load_file, trim_quotes=trim_quotes)
 
     def __setitem__(self, key, value):
         self.__properties__[key] = value
@@ -153,7 +153,7 @@ class PropParser:
     def __contains__(self, key):
         return key in self.__properties__
 
-    def load(self, filename):
+    def load(self, filename, trim_quotes=False):
         self.__properties__ = Properties()
         
         if not os.path.isfile(filename):
@@ -171,6 +171,10 @@ class PropParser:
                 line = line.split('=', 1)
                 key = line[0].strip()
                 value = line[1].strip() if len(line) > 1 else ''
+                if trim_quotes:
+                    if value[0] == value[-1] and (value[0] in ('"', "'")):
+                        value = value[1:-1]
+
                 self.__parse_prop(self.__properties__, cached_comments, key.split('.'), value)
         
         return True
