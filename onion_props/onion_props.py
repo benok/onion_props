@@ -175,17 +175,23 @@ class PropParser:
                     if value[0] == value[-1] and (value[0] in ('"', "'")):
                         value = value[1:-1]
 
-                self.__parse_prop(self.__properties__, cached_comments, key.split('.'), value)
+                self.__parse_prop(self.__properties__, cached_comments, key.split('.'), value, None, '')
         
         return True
 
-    def __parse_prop(self, props, comments, keys, value):
+    def __parse_prop(self, props, comments, keys, value, parent, parent_key):
         if keys[0] in props:
-            self.__parse_prop(props[keys[0]], comments, keys[1:], value)
+            self.__parse_prop(props[keys[0]], comments, keys[1:], value, props, keys[0])
         elif len(keys) > 1:
             props[keys[0]] = Properties()
-            self.__parse_prop(props[keys[0]], comments, keys[1:], value)
+            self.__parse_prop(props[keys[0]], comments, keys[1:], value, props, keys[0])
         else:
+            # support both parent and child have value (e.g. checkpoint.vmState, checkpoint.vmState.readOnly)
+            if type(props) == str:
+                parent[parent_key] = Properties()
+                # move paernt => parent.__value__. (e.g. checkpoint.vmState => checkpoint.vmState.__value)
+                parent[parent_key]['__value__'] = props
+                props = parent[parent_key]
             # save the final value and reset the comments for the next property
             props[keys[0]] = Property(value, comments)
             del comments[:]
