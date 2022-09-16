@@ -19,7 +19,7 @@ onion_props.py  ver. 0.2.4
 '''
 
 from collections import OrderedDict  # to cover python versions < 3.6
-from datetime import datetime
+#from datetime import datetime
 import os
 import time
 
@@ -196,18 +196,18 @@ class PropParser:
             props[keys[0]] = Property(value, comments)
             del comments[:]
 
-    def save(self, filename, timestamp=True, incl_comments=True):
+    def save(self, filename, timestamp=False, incl_comments=True):
         # formatted timestamp example: 'Sat Feb 10 16:07:17 EST 2018'
         # note datetime's strftime %Z interpolation only returns a nonempty string if
         # it is not a default zone (whatever that means), so I'm just using time.strftime's
-        ts = datetime.now().strftime('%a %b %d %H:%M:%S {} %Y'.format(time.strftime('%Z')))
+        #ts = datetime.now().strftime('%a %b %d %H:%M:%S {} %Y'.format(time.strftime('%Z')))
         filename = (os.getcwd() + os.sep if os.sep not in filename else '') + filename
         if not os.path.exists(filename.rsplit('/', 1)[0]):
             os.makedirs(filename.rsplit('/', 1)[0])
 
         with open(filename, 'w+') as f:
-            if timestamp:
-                f.write(self.COMMENT + ts + '\n')
+            #if timestamp:
+            #    f.write(self.COMMENT + ts + '\n')
             compiled = []
             self.__build(self.__properties__, '', compiled, incl_comments=incl_comments)
             f.write('\n'.join(compiled))

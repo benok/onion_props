@@ -31,5 +31,5 @@ setup(
     ],
     keywords='properties java parser',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # py_modules=['onion_props'],
-    install_requires=['datetime']
+    install_requires=['']
 )
